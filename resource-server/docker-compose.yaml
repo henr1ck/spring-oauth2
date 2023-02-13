@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  db:
+    image: mysql
+    container_name: rs-db
+    environment:
+      - 'MYSQL_ROOT_PASSWORD=12345'
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'rs-db-vol:/var/lib/mysql'
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.2'
+          memory: '128M'
+        limits:
+          cpus: '0.5'
+          memory: '512M'
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+
+volumes:
+  rs-db-vol:
