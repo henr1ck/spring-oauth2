@@ -1,0 +1,18 @@
+server:
+  port: 8082
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          xpto-client-credentials:
+            provider: auth
+            client-id: xpto-client
+            client-secret: 123
+            client-name: xpto-client-credentials
+            authorization-grant-type: client_credentials
+            scope: xpto.read, xpto.write
+        provider:
+          auth:
+            issuer-uri: http://auth-server:8080

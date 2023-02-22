@@ -4,12 +4,19 @@ import br.edu.ifpi.resourceserver.domain.Game;
 import br.edu.ifpi.resourceserver.domain.GameRequestBody;
 import br.edu.ifpi.resourceserver.service.GameService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.TimeUnit;
+
+@Log4j2
 @RestController
 @RequestMapping(path = "/api/game")
 @RequiredArgsConstructor
@@ -25,9 +32,13 @@ public class GameController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public Page<Game> findAll(Pageable pageable){
-        return gameService.findAll(pageable);
+    public ResponseEntity<Page<Game>> findAll(HttpServletRequest request, Pageable pageable){
+        Page<Game> gamePage = gameService.findAll(pageable);
+
+        log.info("if-none-match: {}", request.getHeader("if-none-match"));
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.maxAge(30, TimeUnit.SECONDS))
+                .body(gamePage);
     }
 
     @PostMapping

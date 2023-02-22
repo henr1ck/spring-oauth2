@@ -6,7 +6,7 @@ services:
     environment:
       - 'MYSQL_ROOT_PASSWORD=12345'
     ports:
-      - '3306:3306'
+      - '3307:3306'
     volumes:
       - 'rs-db-vol:/var/lib/mysql'
     deploy:
